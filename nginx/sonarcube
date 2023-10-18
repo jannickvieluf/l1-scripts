@@ -1,0 +1,12 @@
+server {
+    server_name  www.sonarqube.domain.com;
+    rewrite ^(.*) $scheme://sonarqube.domain.com$1 permanent;
+}
+
+server {
+    listen 80;
+    server_name sonarqube.domain.com;
+    location / {
+        proxy_pass http://sonarhost:sonarport;
+    }
+}

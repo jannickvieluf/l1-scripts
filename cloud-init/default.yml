@@ -1,6 +1,7 @@
 #cloud-config
 users:
   - name: l1
+    shell: /bin/bash
     groups: users, admin
     sudo: ALL=(ALL) NOPASSWD:ALL
     ssh_authorized_keys:
@@ -11,9 +12,11 @@ packages:
 package_update: true
 package_upgrade: true
 runcmd:
-  - systemctl enable fail2ban
+  - ufw default deny incoming
+  - ufw default allow outgoing
   - ufw allow ssh
   - ufw enable
+  - systemctl enable fail2ban
   - sed -i -e '/^\(#\|\)PermitRootLogin/s/^.*$/PermitRootLogin no/' /etc/ssh/sshd_config
   - sed -i -e '/^\(#\|\)PasswordAuthentication/s/^.*$/PasswordAuthentication no/' /etc/ssh/sshd_config
   - sed -i -e '/^\(#\|\)MaxAuthTries/s/^.*$/MaxAuthTries 5/' /etc/ssh/sshd_config
